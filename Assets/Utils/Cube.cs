@@ -2,6 +2,9 @@
 
 namespace Assets.Utils
 {
+    //куб представляется как 8 точек вершин в пространстве
+    //все вершины хранятся в Vertexes
+    //все стороны из этих вершин составлены
     public class Cube
     {
         public Vector3[] Back;

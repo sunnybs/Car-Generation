@@ -2,21 +2,24 @@
 using Assets.Utils;
 using UnityEngine;
 
+
+//генерация происходит из префабов(заготовленных ранее объектов с уже заданными размерами).
+//Все префабы в папке Prefabs
 public class CarGenerator : MonoBehaviour
 {
-    private readonly int yLevel = 3;
-    public GameObject CarInstance;
-    public GameObject[] TranmissionObjects;
+    private readonly int yLevel = 3; // уровень, на котором генерируются рамы
+    public GameObject CarInstance; // родительский объект для всех деталей машины (указывается через юнити)
+    public GameObject[] TranmissionObjects; // объекты рам (загружаются из префабов через юнити)
     public int TransmissionCount = 4;
     public int WheelCount = 4;
-    public GameObject[] WheelObjects;
+    public GameObject[] WheelObjects; // колеса
 
 
     private void OnGUI()
     {
         if (GUI.Button(new Rect(20, 20, 70, 30), "Generate"))
         {
-            var carMesh = new CarMesh();
+            var carMesh = new CarMesh(); 
             var tramsmissions = LoadDetails(DetailType.Transmission, TransmissionCount);
             CarBuilder.StickTramsmissions(tramsmissions, carMesh, yLevel);
             var wheels = LoadDetails(DetailType.Wheel, WheelCount);
@@ -25,6 +28,7 @@ public class CarGenerator : MonoBehaviour
         }
     }
 
+    //загрузка деталей. Нужно убрать рандомность
     private List<GameObject> LoadDetails(DetailType type, int count)
     {
         var details = new List<GameObject>();
@@ -38,7 +42,7 @@ public class CarGenerator : MonoBehaviour
             else
                 randomDetail = new GameObject();
             var prefab = Instantiate(randomDetail, randomDetail.transform.position, Quaternion.identity,
-                CarInstance.transform);
+                CarInstance.transform); // добавляет объект на карту и задает КарИнстанс как родительский объект
             details.Add(prefab);
         }
 

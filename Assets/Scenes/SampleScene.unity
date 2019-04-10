@@ -338,8 +338,8 @@ MonoBehaviour:
   CarInstance: {fileID: 1009681623}
   TranmissionObjects:
   - {fileID: 7073384489654809122, guid: 277cd2555e2e76146bd29effe1670f27, type: 3}
-  TransmissionCount: 4
-  WheelCount: 4
+  TransmissionCount: 6
+  WheelCount: 10
   WheelObjects:
   - {fileID: 3195029537318622109, guid: e27cfab967f93644bbb7d371d6b2968d, type: 3}
 --- !u!4 &1018326024

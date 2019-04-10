@@ -14,6 +14,7 @@ namespace Assets.Utils
             TransmissionMesh = new List<Cube>();
         }
 
+        //создание сетки для трансмиссии. Можно переделать этот метод для создания сетки для любого типа объекта
         public void AddMeshOfTransmission(Vector3 position, Vector3 form)
         {
             for (var y = position.y; y < position.y + form.y; y += cubeSize)
@@ -22,9 +23,9 @@ namespace Assets.Utils
                 TransmissionMesh.Add(new Cube(new Vector3(x - form.x / 2, y - form.y / 2, z - form.z / 2), cubeSize));
         }
 
+        //поиск работает путем выискивания свободных сторон(тоесть таких, к которым не присоединен никакой куб)
         public WheelPlaces FindWheelsPlaces(List<GameObject> wheels)
         {
-            var wheelWidth = wheels[0].transform.localScale.x;
             var placesOnLeftSide = new List<Cube>();
             var placesOnRightSide = new List<Cube>();
             var rightSides = TransmissionMesh.Select(side => side.Right).ToArray();
@@ -32,15 +33,16 @@ namespace Assets.Utils
 
             foreach (var cube in TransmissionMesh)
             {
-                if (IsSideUnique(rightSides, cube.Left)) placesOnLeftSide.Add(cube);
-
-                if (IsSideUnique(leftSides, cube.Right)) placesOnRightSide.Add(cube);
+                if (IsSideFree(rightSides, cube.Left)) placesOnLeftSide.Add(cube);
+                
+                if (IsSideFree(leftSides, cube.Right)) placesOnRightSide.Add(cube);
             }
-
-            return new WheelPlaces(placesOnLeftSide, placesOnRightSide);
+            // вилПласес тут нужен только для возращения двух элементов из функции
+            return new WheelPlaces(placesOnLeftSide, placesOnRightSide);  
         }
 
-        public static bool IsSideUnique(Vector3[][] sides, Vector3[] sideToFind)
+        
+        private static bool IsSideFree(Vector3[][] sides, Vector3[] sideToFind)
         {
             foreach (var side in sides)
                 if (VectorsEqual(side[0], sideToFind[0]) &&
