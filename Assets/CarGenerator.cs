@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Assets.Utils;
 using UnityEngine;
 
@@ -10,8 +11,11 @@ public class CarGenerator : MonoBehaviour
     private readonly int yLevel = 3; // уровень, на котором генерируются рамы
     public GameObject CarInstance; // родительский объект для всех деталей машины (указывается через юнити)
     public GameObject[] TranmissionObjects; // объекты рам (загружаются из префабов через юнити)
-    public int TransmissionCount = 4;
+    public int Transmission2X4Count = 4;
     public int WheelCount = 4;
+    public int Transmission4X4Count;
+    public GameObject[] Transmission4X4Objects;
+    public GameObject[] BodyObjects;
     public GameObject[] WheelObjects; // колеса
 
 
@@ -20,11 +24,14 @@ public class CarGenerator : MonoBehaviour
         if (GUI.Button(new Rect(20, 20, 70, 30), "Generate"))
         {
             var carMesh = new CarMesh(); 
-            var tramsmissions = LoadDetails(DetailType.Transmission, TransmissionCount);
+            var tramsmissions = LoadDetails(DetailType.Transmission2X4, Transmission2X4Count);
+            //var transmissions4X4 = LoadDetails((DetailType.Transmission4X4), Transmission4X4Count);
             CarBuilder.StickTramsmissions(tramsmissions, carMesh, yLevel);
             var wheels = LoadDetails(DetailType.Wheel, WheelCount);
             var wheelPlaces = carMesh.FindWheelsPlaces(wheels);
             CarBuilder.StickWheels(wheels, wheelPlaces);
+            var body = LoadDetails(DetailType.Body, 1);
+            CarBuilder.StickBody(body.First(),carMesh);
         }
     }
 
@@ -35,13 +42,17 @@ public class CarGenerator : MonoBehaviour
         for (var i = 0; i < count; i++)
         {
             GameObject randomDetail;
-            if (type == DetailType.Transmission)
+            if (type == DetailType.Transmission2X4)
                 randomDetail = TranmissionObjects[Random.Range(0, TranmissionObjects.Length - 1)];
             else if (type == DetailType.Wheel)
                 randomDetail = WheelObjects[Random.Range(0, WheelObjects.Length - 1)];
-            else
-                randomDetail = new GameObject();
-            var prefab = Instantiate(randomDetail, randomDetail.transform.position, Quaternion.identity,
+            else if(type == DetailType.Transmission4X4)
+                randomDetail = Transmission4X4Objects[Random.Range(0, Transmission4X4Objects.Length - 1)];
+            else if (type == DetailType.Body)
+                randomDetail = BodyObjects[Random.Range(0, BodyObjects.Length - 1)];
+            else          
+            randomDetail = new GameObject();
+            var prefab = Instantiate(randomDetail, new Vector3(0,0,0), Quaternion.identity,
                 CarInstance.transform); // добавляет объект на карту и задает КарИнстанс как родительский объект
             details.Add(prefab);
         }
@@ -51,7 +62,9 @@ public class CarGenerator : MonoBehaviour
 
     private enum DetailType
     {
-        Transmission,
-        Wheel
+        Transmission4X4,
+        Transmission2X4,
+        Wheel,
+        Body
     }
 }

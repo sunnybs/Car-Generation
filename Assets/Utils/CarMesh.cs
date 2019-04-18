@@ -8,6 +8,7 @@ namespace Assets.Utils
     {
         private readonly float cubeSize = 1f;
         public List<Cube> TransmissionMesh;
+        private Vector3 transmissionEdge;
 
         public CarMesh()
         {
@@ -20,7 +21,12 @@ namespace Assets.Utils
             for (var y = position.y; y < position.y + form.y; y += cubeSize)
             for (var z = position.z; z < position.z + form.z; z += cubeSize)
             for (var x = position.x; x < position.x + form.x; x += cubeSize)
-                TransmissionMesh.Add(new Cube(new Vector3(x - form.x / 2, y - form.y / 2, z - form.z / 2), cubeSize));
+            {
+                var cube = new Cube(new Vector3(x - form.x / 2, y - form.y / 2, z - form.z / 2), cubeSize);
+                TransmissionMesh.Add(cube);
+                transmissionEdge = new Vector3(x - form.x / 2 + cubeSize, y - form.y / 2 + cubeSize, z - form.z / 2 + cubeSize);
+            }
+    
         }
 
         //поиск работает путем выискивания свободных сторон(тоесть таких, к которым не присоединен никакой куб)
@@ -39,6 +45,13 @@ namespace Assets.Utils
             }
             // вилПласес тут нужен только для возращения двух элементов из функции
             return new WheelPlaces(placesOnLeftSide, placesOnRightSide);  
+        }
+
+        public Vector3 FindBodyPlace(Vector3 bodyForm)
+        {
+            return new Vector3(transmissionEdge.x - bodyForm.x/2,
+                transmissionEdge.y + bodyForm.y/2 ,
+                transmissionEdge.z - bodyForm.z/2);
         }
 
         
