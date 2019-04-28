@@ -7,12 +7,11 @@ namespace Assets.Utils
     public class CarMesh
     {
         private readonly float cubeSize = 1f;
-        public List<Cube> TransmissionMesh;
-        private Vector3 transmissionEdge;
-
+        public Dictionary<Vector3,Cube> TransmissionMesh;
+        
         public CarMesh()
         {
-            TransmissionMesh = new List<Cube>();
+            TransmissionMesh = new Dictionary<Vector3, Cube>();
         }
 
         //создание сетки для трансмиссии. Можно переделать этот метод для создания сетки для любого типа объекта
@@ -23,8 +22,7 @@ namespace Assets.Utils
             for (var x = position.x; x < position.x + form.x; x += cubeSize)
             {
                 var cube = new Cube(new Vector3(x - form.x / 2, y - form.y / 2, z - form.z / 2), cubeSize);
-                TransmissionMesh.Add(cube);
-                transmissionEdge = new Vector3(x - form.x / 2 + cubeSize, y - form.y / 2 + cubeSize, z - form.z / 2 + cubeSize);
+                TransmissionMesh[new Vector3(x, y, z)] = cube;   
             }
     
         }
@@ -34,10 +32,10 @@ namespace Assets.Utils
         {
             var placesOnLeftSide = new List<Cube>();
             var placesOnRightSide = new List<Cube>();
-            var rightSides = TransmissionMesh.Select(side => side.Right).ToArray();
-            var leftSides = TransmissionMesh.Select(side => side.Left).ToArray();
+            var rightSides = TransmissionMesh.Select(side => side.Value.Right).ToArray();
+            var leftSides = TransmissionMesh.Select(side => side.Value.Left).ToArray();
 
-            foreach (var cube in TransmissionMesh)
+            foreach (var cube in TransmissionMesh.Values)
             {
                 if (IsSideFree(rightSides, cube.Left)) placesOnLeftSide.Add(cube);
                 
@@ -47,13 +45,34 @@ namespace Assets.Utils
             return new WheelPlaces(placesOnLeftSide, placesOnRightSide);  
         }
 
-        public Vector3 FindBodyPlace(Vector3 bodyForm)
+        public List<Vector3> FindBodyPlace(Vector3 bodyForm)
         {
-            return new Vector3(transmissionEdge.x - bodyForm.x/2,
-                transmissionEdge.y + bodyForm.y/2 ,
-                transmissionEdge.z - bodyForm.z/2);
+            var goodPositions = new List<Vector3>();
+            foreach (var pos in TransmissionMesh)
+            {
+                if (IsPositionGoodForBody(pos.Key, bodyForm))
+                {
+                    var goodPos = new Vector3(pos.Value.Vertexes[0].x + bodyForm.x / 2,
+                        pos.Value.Vertexes[0].y + 1 + bodyForm.y / 2,
+                        pos.Value.Vertexes[0].z + bodyForm.z / 2);
+                    goodPositions.Add(goodPos);
+                }
+                   
+            }
+
+            return goodPositions;
         }
 
+        private bool IsPositionGoodForBody(Vector3 pos, Vector3 bodyForm)
+        {
+            var temp = new Cube(new Vector3(0,0,0),1 );
+            return (TransmissionMesh.TryGetValue(pos, out temp)
+                    && TransmissionMesh.TryGetValue(new Vector3(pos.x + bodyForm.x - 1, pos.y, pos.z), out temp)
+                    && TransmissionMesh.TryGetValue(new Vector3(pos.x, pos.y, pos.z + bodyForm.z - 1), out temp)
+                    && TransmissionMesh.TryGetValue(new Vector3(pos.x + bodyForm.x - 1, pos.y, pos.z + bodyForm.z - 1),
+                        out temp));
+
+        }
         
         private static bool IsSideFree(Vector3[][] sides, Vector3[] sideToFind)
         {
@@ -72,5 +91,7 @@ namespace Assets.Utils
                    Mathf.Abs(a.y - b.y) <= float.Epsilon &&
                    Mathf.Abs(a.z - b.z) <= float.Epsilon;
         }
+
+        
     }
 }

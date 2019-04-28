@@ -23,15 +23,16 @@ public class CarGenerator : MonoBehaviour
     {
         if (GUI.Button(new Rect(20, 20, 70, 30), "Generate"))
         {
-            var carMesh = new CarMesh(); 
+            var carMesh = new CarMesh();
             var tramsmissions = LoadDetails(DetailType.Transmission2X4, Transmission2X4Count);
-            //var transmissions4X4 = LoadDetails((DetailType.Transmission4X4), Transmission4X4Count);
-            CarBuilder.StickTramsmissions(tramsmissions, carMesh, yLevel);
+            var blueprint = BlueprintManager.PickByCount(Transmission2X4Count);
+            blueprint.StickTramsmissions(tramsmissions, carMesh, yLevel);
             var wheels = LoadDetails(DetailType.Wheel, WheelCount);
             var wheelPlaces = carMesh.FindWheelsPlaces(wheels);
-            CarBuilder.StickWheels(wheels, wheelPlaces);
+            blueprint.StickWheels(wheels, wheelPlaces);
             var body = LoadDetails(DetailType.Body, 1);
-            CarBuilder.StickBody(body.First(),carMesh);
+            blueprint.StickBody(body.First(),carMesh, new Vector3(4,4,6));
+            //PrintMesh(carMesh);
         }
     }
 
@@ -66,5 +67,17 @@ public class CarGenerator : MonoBehaviour
         Transmission2X4,
         Wheel,
         Body
+    }
+
+    void PrintMesh(CarMesh carMesh)
+    {
+        var allMeshVertexes = new HashSet<Vector3>();
+        foreach (var cube in carMesh.TransmissionMesh.Values)
+            foreach (var vert in cube.Vertexes)
+                allMeshVertexes.Add(vert);
+        var lineRender = CarInstance.GetComponent<LineRenderer>();
+        lineRender.widthMultiplier = 0.1f;
+        lineRender.positionCount = allMeshVertexes.Count;
+        lineRender.SetPositions(allMeshVertexes.ToArray());
     }
 }

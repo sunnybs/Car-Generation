@@ -14,6 +14,7 @@ namespace Assets.Utils
         public Vector3[] Right;
         public Vector3[] Top;
         public Vector3[] Vertexes;
+        public Vector3 Center;
 
         public Cube(Vector3 position, float cubeSize)
         {
@@ -34,6 +35,7 @@ namespace Assets.Utils
             Back = new[] {Vertexes[2], Vertexes[3], Vertexes[6], Vertexes[7]};
             Left = new[] {Vertexes[0], Vertexes[2], Vertexes[4], Vertexes[6]};
             Right = new[] {Vertexes[1], Vertexes[3], Vertexes[5], Vertexes[7]};
+            Center = new Vector3(position.x + cubeSize/2, position.y + cubeSize / 2, position.z + cubeSize / 2);
         }
     }
 }
