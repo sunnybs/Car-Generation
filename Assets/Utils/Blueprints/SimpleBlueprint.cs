@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 namespace Assets.Utils.Blueprints
@@ -29,12 +25,13 @@ namespace Assets.Utils.Blueprints
 
         public override void StickBody(GameObject body, CarMesh carMesh, Vector3 bodyBottomForm)
         {
+            var positions = carMesh.FindBodyPlace(bodyBottomForm);
+            var pos = positions.Count - 1; // Вот тут можно просто подобрать более менее нормальную позицию
             body.transform.localScale = new Vector3(1.3f, 2, 1.3f);
             var modelCenterOffset = body.GetComponentInChildren<Collider>().bounds.center;
-            var pos = carMesh.FindBodyPlace(bodyBottomForm);
-            body.transform.position = new Vector3(pos[pos.Count - 1].x - modelCenterOffset.x,
-                pos[pos.Count - 1].y - modelCenterOffset.y,
-                pos[pos.Count - 1].z - modelCenterOffset.z);
+            body.transform.position = new Vector3(positions[pos].x - modelCenterOffset.x,
+                positions[pos].y - modelCenterOffset.y,
+                positions[pos].z - modelCenterOffset.z);
         }
     }
 }

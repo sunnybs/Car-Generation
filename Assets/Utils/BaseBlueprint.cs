@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 namespace Assets.Utils
@@ -31,12 +27,14 @@ namespace Assets.Utils
                         places.PlacesOnLeftSide[startOffset].Center;
                     startOffset += offset;
                 }
+
                 wheels[i].transform.Translate(-wheels[i].transform.localScale.x, 0, 0);
             }
+
             startOffset = 1;
             endOffset = 1;
             var offsetForRightSide = wheels.Count / 2;
-            for (var i = 0; i < wheels.Count / 2 + (wheels.Count % 2); i++)
+            for (var i = 0; i < wheels.Count / 2 + wheels.Count % 2; i++)
             {
                 if (i % 2 == 0)
                 {
@@ -50,6 +48,7 @@ namespace Assets.Utils
                         places.PlacesOnRightSide[startOffset].Center;
                     startOffset += offset;
                 }
+
                 wheels[i + offsetForRightSide].transform.Translate(wheels[i].transform.localScale.x, 0, 0);
             }
         }
