@@ -7,7 +7,7 @@ namespace Assets.Utils
     {
         public abstract void StickTramsmissions(List<GameObject> transmissions, CarMesh carMesh, float yLevel);
 
-        public abstract void StickBody(GameObject body, CarMesh carMesh, Vector3 bodyBottomForm);
+        public abstract void StickBody(GameObject body, CarMesh carMesh, Detail bodyForm);
 
         public void StickWheels(List<GameObject> wheels, WheelPlaces places)
         {

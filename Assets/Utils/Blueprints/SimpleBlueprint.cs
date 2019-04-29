@@ -12,22 +12,16 @@ namespace Assets.Utils.Blueprints
             foreach (var transmission in transmissions)
             {
                 transmission.transform.Translate(xOffset, yLevel, zOffset);
-                carMesh.AddMeshOfTransmission(transmission.transform.position, transmission.transform.localScale);
-
-                var isXOffset = false; /* тут определяется будет ли сдвиг по ширине или по длине
-                нужно убрать рандомность и заставить рамы сдвигаться так, чтобы общая склеенная рама получилась
-                симметричной*/
-                if (isXOffset)
-                    xOffset += transmission.transform.localScale.x; // в localScale хранятся данные о форме объекта
-                else zOffset += transmission.transform.localScale.z;
+                carMesh.AddMesh(transmission.transform.position, transmission.transform.localScale);
+                zOffset += transmission.transform.localScale.z;
             }
         }
 
-        public override void StickBody(GameObject body, CarMesh carMesh, Vector3 bodyBottomForm)
+        public override void StickBody(GameObject body, CarMesh carMesh, Detail bodyForm)
         {
-            var positions = carMesh.FindBodyPlace(bodyBottomForm);
+            var positions = carMesh.FindBodyPlace(new Vector3(bodyForm.MaxWeight, bodyForm.MaxHeight, bodyForm.MaxLength));
             var pos = positions.Count - 1; // Вот тут можно просто подобрать более менее нормальную позицию
-            body.transform.localScale = new Vector3(1.3f, 2, 1.3f);
+            carMesh.AddLevelsMesh(positions[pos], bodyForm);
             var modelCenterOffset = body.GetComponentInChildren<Collider>().bounds.center;
             body.transform.position = new Vector3(positions[pos].x - modelCenterOffset.x,
                 positions[pos].y - modelCenterOffset.y,

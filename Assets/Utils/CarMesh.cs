@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
@@ -7,23 +8,39 @@ namespace Assets.Utils
     public class CarMesh
     {
         private readonly float cubeSize = 1f;
-        public Dictionary<Vector3, Cube> TransmissionMesh;
+        public Dictionary<Vector3, Cube> Mesh;
 
         public CarMesh()
         {
-            TransmissionMesh = new Dictionary<Vector3, Cube>();
+            Mesh = new Dictionary<Vector3, Cube>();
         }
 
-        //создание сетки для трансмиссии. Можно переделать этот метод для создания сетки для любого типа объекта
-        public void AddMeshOfTransmission(Vector3 position, Vector3 form)
+        
+        public void AddMesh(Vector3 position, Vector3 form)
         {
             for (var y = position.y; y < position.y + form.y; y += cubeSize)
             for (var z = position.z; z < position.z + form.z; z += cubeSize)
             for (var x = position.x; x < position.x + form.x; x += cubeSize)
             {
                 var cube = new Cube(new Vector3(x - form.x / 2, y - form.y / 2, z - form.z / 2), cubeSize);
-                TransmissionMesh[new Vector3(x, y, z)] = cube;
+                Mesh[new Vector3(x, y, z)] = cube;
             }
+        }
+
+        public void AddLevelsMesh(Vector3 position, Detail form)
+        {
+            var startPos = new Vector3(position.x - form.MaxWeight / 2, 
+                position.y - form.MaxHeight / 2, 
+                position.z - form.MaxLength / 2);
+            var yOffset = 0f;
+            foreach (var level in form.FormLevels)
+            {
+                var pos = new Vector3(startPos.x + level.x / 2, 
+                    startPos.y + level.y / 2 + yOffset, 
+                    startPos.z + level.z / 2);
+                AddMesh(pos, level);
+                yOffset += level.y;
+            }    
         }
 
         //поиск работает путем выискивания свободных сторон(тоесть таких, к которым не присоединен никакой куб)
@@ -31,10 +48,10 @@ namespace Assets.Utils
         {
             var placesOnLeftSide = new List<Cube>();
             var placesOnRightSide = new List<Cube>();
-            var rightSides = TransmissionMesh.Select(side => side.Value.Right).ToArray();
-            var leftSides = TransmissionMesh.Select(side => side.Value.Left).ToArray();
+            var rightSides = Mesh.Select(side => side.Value.Right).ToArray();
+            var leftSides = Mesh.Select(side => side.Value.Left).ToArray();
 
-            foreach (var cube in TransmissionMesh.Values)
+            foreach (var cube in Mesh.Values)
             {
                 if (IsSideFree(rightSides, cube.Left)) placesOnLeftSide.Add(cube);
 
@@ -48,7 +65,7 @@ namespace Assets.Utils
         public List<Vector3> FindBodyPlace(Vector3 bodyForm)
         {
             var goodPositions = new List<Vector3>();
-            foreach (var pos in TransmissionMesh)
+            foreach (var pos in Mesh)
                 if (IsPositionGoodForBody(pos.Key, bodyForm))
                 {
                     var goodPos = new Vector3(pos.Value.Vertexes[0].x + bodyForm.x / 2,
@@ -63,10 +80,10 @@ namespace Assets.Utils
         private bool IsPositionGoodForBody(Vector3 pos, Vector3 bodyForm)
         {
             var temp = new Cube(new Vector3(0, 0, 0), 1);
-            return TransmissionMesh.TryGetValue(pos, out temp)
-                   && TransmissionMesh.TryGetValue(new Vector3(pos.x + bodyForm.x - 1, pos.y, pos.z), out temp)
-                   && TransmissionMesh.TryGetValue(new Vector3(pos.x, pos.y, pos.z + bodyForm.z - 1), out temp)
-                   && TransmissionMesh.TryGetValue(new Vector3(pos.x + bodyForm.x - 1, pos.y, pos.z + bodyForm.z - 1),
+            return Mesh.TryGetValue(pos, out temp)
+                   && Mesh.TryGetValue(new Vector3(pos.x + bodyForm.x - 1, pos.y, pos.z), out temp)
+                   && Mesh.TryGetValue(new Vector3(pos.x, pos.y, pos.z + bodyForm.z - 1), out temp)
+                   && Mesh.TryGetValue(new Vector3(pos.x + bodyForm.x - 1, pos.y, pos.z + bodyForm.z - 1),
                        out temp);
         }
 
