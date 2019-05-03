@@ -140,5 +140,6 @@ MonoBehaviour:
   - {x: 4, y: 2, z: 6}
   - {x: 4, y: 2, z: 2}
   MaxHeight: 4
-  MaxWeight: 4
+  MaxWidth: 4
   MaxLength: 6
+  Type: 0

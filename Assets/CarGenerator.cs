@@ -9,12 +9,16 @@ using UnityEngine;
 //Все префабы в папке Prefabs
 public class CarGenerator : MonoBehaviour
 {
-    public GameObject[] BodyObjects;
     public GameObject CarInstance; // родительский объект для всех деталей машины (указывается через юнити)
-    public GameObject[] TranmissionObjects; // объекты рам (загружаются из префабов через юнити)
-    public GameObject[] WheelObjects; // колеса
+    public GameObject[] BodyObjects;
+    public GameObject[] TransmissionObjects; 
+    public GameObject[] WheelObjects;
+    public GameObject[] ArmorObjects;
+    public GameObject[] GunObjects;
     public int TransmissionCount = 4;
     public int WheelCount = 4;
+    public int ArmorCount = 2;
+    public int GunCount = 2;
     private readonly int yLevel = 3; // уровень, на котором генерируются рамы
 
     private void OnGUI()
@@ -22,16 +26,18 @@ public class CarGenerator : MonoBehaviour
         if (GUI.Button(new Rect(20, 20, 70, 30), "Generate"))
         {
             var carMesh = new CarMesh();
-            var tramsmissions = LoadDetails(DetailType.Transmission, TransmissionCount);
             var blueprint = BlueprintManager.PickByCount(TransmissionCount);
-            blueprint.StickTramsmissions(tramsmissions, carMesh, yLevel);
+            var transmissions = LoadDetails(DetailType.Transmission, TransmissionCount);
+            blueprint.StickTramsmissions(transmissions, carMesh, yLevel);
             var wheels = LoadDetails(DetailType.Wheel, WheelCount);
-            var wheelPlaces = carMesh.FindWheelsPlaces(wheels);
-            blueprint.StickWheels(wheels, wheelPlaces);
+            blueprint.StickWheels(wheels, carMesh);
             var body = LoadDetails(DetailType.Body, 1);
-            var bodyForm = body[0].GetComponent<Detail>();
-            blueprint.StickBody(body.First(), carMesh, bodyForm);
-            PrintMesh(carMesh);
+            blueprint.StickBody(body.First(), carMesh);
+            var armors = LoadDetails(DetailType.Armor, ArmorCount);
+            blueprint.StickArmors(armors,carMesh);
+            
+
+            //PrintMesh(carMesh);
         }
     }
 
@@ -43,11 +49,15 @@ public class CarGenerator : MonoBehaviour
         {
             GameObject randomDetail;
             if (type == DetailType.Transmission)
-                randomDetail = TranmissionObjects[Random.Range(0, TranmissionObjects.Length - 1)];
+                randomDetail = TransmissionObjects[Random.Range(0, TransmissionObjects.Length - 1)];
             else if (type == DetailType.Wheel)
                 randomDetail = WheelObjects[Random.Range(0, WheelObjects.Length - 1)];
             else if (type == DetailType.Body)
                 randomDetail = BodyObjects[Random.Range(0, BodyObjects.Length - 1)];
+            else if (type == DetailType.Armor)
+                randomDetail = ArmorObjects[Random.Range(0, ArmorObjects.Length - 1)];
+            else if (type == DetailType.Gun)
+                randomDetail = GunObjects[Random.Range(0, GunObjects.Length - 1)];
             else
                 randomDetail = new GameObject();
             var prefab = Instantiate(randomDetail, new Vector3(0, 0, 0), Quaternion.identity,
@@ -62,8 +72,11 @@ public class CarGenerator : MonoBehaviour
     {
         var allMeshVertexes = new HashSet<Vector3>();
         foreach (var cube in carMesh.Mesh.Values)
-        foreach (var vert in cube.Vertexes)
-            allMeshVertexes.Add(vert);
+        {
+            foreach (var vert in cube.Vertexes)
+                allMeshVertexes.Add(vert);
+            allMeshVertexes.Add(cube.Center);
+        }
         var lineRender = CarInstance.GetComponent<LineRenderer>();
         lineRender.widthMultiplier = 0.1f;
         lineRender.positionCount = allMeshVertexes.Count;

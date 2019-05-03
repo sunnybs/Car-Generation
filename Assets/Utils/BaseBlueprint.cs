@@ -7,10 +7,13 @@ namespace Assets.Utils
     {
         public abstract void StickTramsmissions(List<GameObject> transmissions, CarMesh carMesh, float yLevel);
 
-        public abstract void StickBody(GameObject body, CarMesh carMesh, Detail bodyForm);
+        public abstract void StickBody(GameObject body, CarMesh carMesh);
 
-        public void StickWheels(List<GameObject> wheels, WheelPlaces places)
+        public abstract void StickArmors(List<GameObject> armors, CarMesh carMesh);
+
+        public void StickWheels(List<GameObject> wheels, CarMesh carMesh)
         {
+            var places = carMesh.FindFreeSides();
             int startOffset = 1, endOffset = 1;
             const int offset = 2;
             for (var i = 0; i < wheels.Count / 2; i++)
@@ -18,13 +21,13 @@ namespace Assets.Utils
                 if (i % 2 == 0)
                 {
                     wheels[i].transform.position =
-                        places.PlacesOnLeftSide[places.PlacesOnRightSide.Count - 1 - endOffset].Center;
+                        carMesh.Mesh[places.LeftSidesKeys[places.LeftSidesKeys.Count - 1 - endOffset]].Center;
                     endOffset += offset;
                 }
                 else
                 {
                     wheels[i].transform.position =
-                        places.PlacesOnLeftSide[startOffset].Center;
+                        carMesh.Mesh[places.LeftSidesKeys[startOffset]].Center;
                     startOffset += offset;
                 }
 
@@ -39,13 +42,13 @@ namespace Assets.Utils
                 if (i % 2 == 0)
                 {
                     wheels[i + offsetForRightSide].transform.position =
-                        places.PlacesOnRightSide[places.PlacesOnRightSide.Count - 1 - endOffset].Center;
+                        carMesh.Mesh[places.RightSidesKeys[places.RightSidesKeys.Count - 1 - endOffset]].Center;
                     endOffset += offset;
                 }
                 else
                 {
                     wheels[i + offsetForRightSide].transform.position =
-                        places.PlacesOnRightSide[startOffset].Center;
+                        carMesh.Mesh[places.RightSidesKeys[startOffset]].Center;
                     startOffset += offset;
                 }
 

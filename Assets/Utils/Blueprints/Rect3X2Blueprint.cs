@@ -19,20 +19,28 @@ namespace Assets.Utils.Blueprints
 
                 transmissions[i].transform.Translate(xOffset, yLevel, zOffset);
                 carMesh.AddMesh(transmissions[i].transform.position,
-                    transmissions[i].transform.localScale);
+                    transmissions[i].transform.localScale,DetailType.Transmission);
                 zOffset += transmissions[i].transform.localScale.z;
             }
         }
 
-        public override void StickBody(GameObject body, CarMesh carMesh, Detail bodyForm)
+        public override void StickBody(GameObject body, CarMesh carMesh)
         {
-            var positions = carMesh.FindBodyPlace(new Vector3(bodyForm.MaxWeight, bodyForm.MaxHeight, bodyForm.MaxLength));
+            var bodyForm = body.GetComponent<Detail>();
+            var positions = carMesh.FindBodyPlace(new Vector3(bodyForm.MaxWidth, bodyForm.MaxHeight, bodyForm.MaxLength));
             var pos = positions.Count - 3; // Вот тут можно просто подобрать более менее нормальную позицию
             carMesh.AddLevelsMesh(positions[pos], bodyForm);
             var modelCenterOffset = body.GetComponentInChildren<Collider>().bounds.center;
             body.transform.position = new Vector3(positions[pos].x - modelCenterOffset.x,
                 positions[pos].y - modelCenterOffset.y,
                 positions[pos].z - modelCenterOffset.z);
+        }
+
+        public override void StickArmors(List<GameObject> armors, CarMesh carMesh)
+        {
+            CarBuilder.TransformArmor(armors[0], carMesh, 0);
+
+            CarBuilder.TransformArmor(armors[1], carMesh, 8);
         }
     }
 }
