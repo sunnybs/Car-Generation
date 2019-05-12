@@ -17,7 +17,7 @@ public class CarGenerator : MonoBehaviour
     public GameObject[] GunObjects;
     public int TransmissionCount = 4;
     public int WheelCount = 4;
-    public int ArmorCount = 2;
+    public int ArmorCount = 1;
     public int GunCount = 2;
     private readonly int yLevel = 3; // уровень, на котором генерируются рамы
 
@@ -28,7 +28,7 @@ public class CarGenerator : MonoBehaviour
             var carMesh = new CarMesh();
             var blueprint = BlueprintManager.PickByCount(TransmissionCount);
             var transmissions = LoadDetails(DetailType.Transmission, TransmissionCount);
-            blueprint.StickTramsmissions(transmissions, carMesh, yLevel);
+            blueprint.StickTransmissions(transmissions, carMesh, yLevel);
             var wheels = LoadDetails(DetailType.Wheel, WheelCount);
             blueprint.StickWheels(wheels, carMesh);
             var body = LoadDetails(DetailType.Body, 1);
@@ -37,7 +37,7 @@ public class CarGenerator : MonoBehaviour
             blueprint.StickArmors(armors,carMesh);
             
 
-            //PrintMesh(carMesh);
+          //  PrintMesh(carMesh);
         }
     }
 
@@ -60,7 +60,7 @@ public class CarGenerator : MonoBehaviour
                 randomDetail = GunObjects[Random.Range(0, GunObjects.Length - 1)];
             else
                 randomDetail = new GameObject();
-            var prefab = Instantiate(randomDetail, new Vector3(0, 0, 0), Quaternion.identity,
+            var prefab = Instantiate(randomDetail, new Vector3(0, 0, 0), randomDetail.transform.rotation,
                 CarInstance.transform); // добавляет объект на карту и задает КарИнстанс как родительский объект
             details.Add(prefab);
         }
@@ -75,7 +75,7 @@ public class CarGenerator : MonoBehaviour
         {
             foreach (var vert in cube.Vertexes)
                 allMeshVertexes.Add(vert);
-            allMeshVertexes.Add(cube.Center);
+          
         }
         var lineRender = CarInstance.GetComponent<LineRenderer>();
         lineRender.widthMultiplier = 0.1f;

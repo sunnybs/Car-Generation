@@ -443,7 +443,7 @@ MonoBehaviour:
   GunObjects: []
   TransmissionCount: 5
   WheelCount: 4
-  ArmorCount: 2
+  ArmorCount: 1
   GunCount: 0
 --- !u!4 &1018326024
 Transform:

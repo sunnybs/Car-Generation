@@ -5,7 +5,7 @@ namespace Assets.Utils
 {
     public abstract class BaseBlueprint
     {
-        public abstract void StickTramsmissions(List<GameObject> transmissions, CarMesh carMesh, float yLevel);
+        public abstract void StickTransmissions(List<GameObject> transmissions, CarMesh carMesh, float yLevel);
 
         public abstract void StickBody(GameObject body, CarMesh carMesh);
 
@@ -18,6 +18,9 @@ namespace Assets.Utils
             const int offset = 2;
             for (var i = 0; i < wheels.Count / 2; i++)
             {
+                var form = wheels[i].GetComponent<Detail>();
+                var modelCenterOffset = wheels[i].GetComponentInChildren<Collider>().bounds.center;
+
                 if (i % 2 == 0)
                 {
                     wheels[i].transform.position =
@@ -31,7 +34,11 @@ namespace Assets.Utils
                     startOffset += offset;
                 }
 
-                wheels[i].transform.Translate(-wheels[i].transform.localScale.x, 0, 0);
+                wheels[i].transform.Translate(-form.MaxWidth, 0, 0);
+                carMesh.AddMesh(wheels[i].transform.position,
+                    new Vector3(form.MaxWidth, form.MaxHeight, form.MaxLength),
+                    DetailType.Wheel);
+                wheels[i].transform.Translate(-modelCenterOffset.x,-modelCenterOffset.y, -modelCenterOffset.z);
             }
 
             startOffset = 1;
@@ -39,20 +46,28 @@ namespace Assets.Utils
             var offsetForRightSide = wheels.Count / 2;
             for (var i = 0; i < wheels.Count / 2 + wheels.Count % 2; i++)
             {
+                var index = i + offsetForRightSide;
+                var form = wheels[index].GetComponent<Detail>();
+                var modelCenterOffset = wheels[index].GetComponentInChildren<Collider>().bounds.center;
+
                 if (i % 2 == 0)
                 {
-                    wheels[i + offsetForRightSide].transform.position =
+                    wheels[index].transform.position =
                         carMesh.Mesh[places.RightSidesKeys[places.RightSidesKeys.Count - 1 - endOffset]].Center;
                     endOffset += offset;
                 }
                 else
                 {
-                    wheels[i + offsetForRightSide].transform.position =
+                    wheels[index].transform.position =
                         carMesh.Mesh[places.RightSidesKeys[startOffset]].Center;
                     startOffset += offset;
                 }
 
-                wheels[i + offsetForRightSide].transform.Translate(wheels[i].transform.localScale.x, 0, 0);
+                wheels[index].transform.Translate(form.MaxWidth, 0, 0);
+                carMesh.AddMesh(wheels[index].transform.position,
+                    new Vector3(form.MaxWidth, form.MaxHeight, form.MaxLength),
+                    DetailType.Wheel);
+                wheels[index].transform.Translate(-modelCenterOffset.x, -modelCenterOffset.y, -modelCenterOffset.z);
             }
         }
     }
