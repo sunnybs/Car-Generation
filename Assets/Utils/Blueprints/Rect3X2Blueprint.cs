@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Assets.Utils.Blueprints
@@ -39,9 +40,20 @@ namespace Assets.Utils.Blueprints
 
         public override void StickArmors(List<GameObject> armors, CarMesh carMesh)
         {
-            CarBuilder.TransformArmor(armors[0], carMesh, 0);
+            CarBuilder.TransformDetail(armors[0], carMesh, 0);
 
-            CarBuilder.TransformArmor(armors[1], carMesh, 8);
+            CarBuilder.TransformDetail(armors[1], carMesh, 8);
+        }
+
+        public override void StickGuns(List<GameObject> guns, CarMesh carMesh)
+        {
+            try
+            {
+                CarBuilder.TransformDetail(guns[0], carMesh, 0);
+            }
+            catch (Exception e)
+            {
+            }
         }
     }
 }

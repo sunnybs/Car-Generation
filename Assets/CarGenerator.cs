@@ -15,10 +15,10 @@ public class CarGenerator : MonoBehaviour
     public GameObject[] WheelObjects;
     public GameObject[] ArmorObjects;
     public GameObject[] GunObjects;
-    public int TransmissionCount = 4;
-    public int WheelCount = 4;
-    public int ArmorCount = 1;
-    public int GunCount = 2;
+    public int TransmissionCount;
+    public int WheelCount;
+    public int ArmorCount;
+    public int GunCount;
     private readonly int yLevel = 3; // уровень, на котором генерируются рамы
 
     private void OnGUI()
@@ -35,9 +35,11 @@ public class CarGenerator : MonoBehaviour
             blueprint.StickBody(body.First(), carMesh);
             var armors = LoadDetails(DetailType.Armor, ArmorCount);
             blueprint.StickArmors(armors,carMesh);
-            
+            var guns = LoadDetails(DetailType.Gun, GunCount);
+            blueprint.StickGuns(guns, carMesh);
 
-          //  PrintMesh(carMesh);
+
+            //  PrintMesh(carMesh);
         }
     }
 

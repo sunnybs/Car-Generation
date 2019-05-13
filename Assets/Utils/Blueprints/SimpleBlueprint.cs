@@ -31,15 +31,27 @@ namespace Assets.Utils.Blueprints
         {
             try
             {
-                CarBuilder.TransformArmor(armors[0], carMesh, 0);
-                CarBuilder.TransformArmor(armors[1], carMesh, 46);
+                CarBuilder.TransformDetail(armors[0], carMesh, 0);
+                CarBuilder.TransformDetail(armors[1], carMesh, 46);
 
             }
             catch (Exception e)
             {
             }
+        }
 
-
+        public override void StickGuns(List<GameObject> guns, CarMesh carMesh)
+        {
+            try
+            {
+                CarBuilder.TransformDetail(guns[0], carMesh, 148);
+                CarBuilder.TransformDetail(guns[1], carMesh, 148);
+            }
+            catch (Exception e)
+            {
+            }
         }
     }
+
+
 }

@@ -21,7 +21,7 @@ namespace Assets.Utils
                 positions[pos].z - modelCenterOffset.z);
         }
 
-        public static void TransformArmor(GameObject armor, CarMesh carMesh, int pos)
+        public static void TransformDetail(GameObject armor, CarMesh carMesh, int pos)
         {
             var bodyForm = armor.GetComponent<Detail>();
             var positions = carMesh.FindDetailPlace(bodyForm);

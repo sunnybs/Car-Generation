@@ -11,6 +11,8 @@ namespace Assets.Utils
 
         public abstract void StickArmors(List<GameObject> armors, CarMesh carMesh);
 
+        public abstract void StickGuns(List<GameObject> armors, CarMesh carMesh);
+
         public void StickWheels(List<GameObject> wheels, CarMesh carMesh)
         {
             var places = carMesh.FindFreeSides();
