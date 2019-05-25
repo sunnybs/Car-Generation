@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace Assets.Utils
 {
@@ -14,5 +13,4 @@ namespace Assets.Utils
             Rotation = rot;
         }
     }
-    
 }

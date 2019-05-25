@@ -4,13 +4,13 @@ using UnityEngine;
 
 namespace Assets.Utils.Blueprints
 {
-    public class SimpleBlueprint : BaseBlueprint
+    public class Simple2Blueprint : BaseBlueprint
     {
         public override int[] GetInfo()
         {
-            var maxTransmissionCount = 5;
+            var maxTransmissionCount = 6;
             var maxWheelCount = 4;
-            var maxArmorCount = 2;
+            var maxArmorCount = 4;
             var maxGunCount = 4;
             return new[] {maxTransmissionCount, maxWheelCount, maxArmorCount, maxGunCount};
         }
@@ -35,14 +35,13 @@ namespace Assets.Utils.Blueprints
             CarBuilder.TransformBody(body, carMesh, 5);
         }
 
-
         public override void StickArmors(List<GameObject> armors, CarMesh carMesh)
         {
-            var name = "ArmorsSimpleBlueprint";
-            var createMode = false;
+            var name = "ArmorsSimple2Blueprint";
+            var staticMode = true;
             try
             {
-                if (!createMode)
+                if (staticMode)
                 {
                     var positions =
                         CarBuilder.DeserializeTransforms("Assets/Utils/Blueprints/BlueprintsData/" + name + ".dat");
@@ -53,6 +52,8 @@ namespace Assets.Utils.Blueprints
                 {
                     CarBuilder.TransformDetail(armors[0], carMesh, 0);
                     CarBuilder.TransformDetail(armors[1], carMesh, 46);
+                    CarBuilder.TransformDetail(armors[2], carMesh, 33);
+                    CarBuilder.TransformDetail(armors[3], carMesh, 33);
                     CarBuilder.SavePositions(armors, name);
                 }
             }
@@ -62,9 +63,10 @@ namespace Assets.Utils.Blueprints
             }
         }
 
+
         public override void StickGuns(List<GameObject> guns, CarMesh carMesh)
         {
-            var name = "GunsSimpleBlueprint";
+            var name = "GunsSimple2Blueprint";
             var staticMode = true;
             try
             {

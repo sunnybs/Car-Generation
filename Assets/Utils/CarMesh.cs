@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
@@ -53,28 +52,32 @@ namespace Assets.Utils
         {
             var result = new List<DetailPlace>();
             var freePlaces = FindFreeSides();
-         
+
             foreach (var topPlace in freePlaces.TopSidesKeys)
             {
                 var rotations = Enumerable.Range(0, 4).Select(rot => new Vector3(0, 90 * rot, 0)).ToArray();
 
                 var pos = new Vector3(Mesh[topPlace].Vertexes[0].x + detail.MaxWidth / 2,
-                    Mesh[topPlace].Vertexes[0].y + cubeSize + detail.MaxHeight / 2, Mesh[topPlace].Vertexes[0].z + detail.MaxLength / 2);
+                    Mesh[topPlace].Vertexes[0].y + cubeSize + detail.MaxHeight / 2,
+                    Mesh[topPlace].Vertexes[0].z + detail.MaxLength / 2);
                 result.Add(new DetailPlace(pos, rotations[0]));
 
                 pos = new Vector3(Mesh[topPlace].Vertexes[0].x + detail.MaxLength / 2,
-                    Mesh[topPlace].Vertexes[0].y + cubeSize + detail.MaxHeight / 2, Mesh[topPlace].Vertexes[0].z + detail.MaxWidth / 2);
+                    Mesh[topPlace].Vertexes[0].y + cubeSize + detail.MaxHeight / 2,
+                    Mesh[topPlace].Vertexes[0].z + detail.MaxWidth / 2);
                 result.Add(new DetailPlace(pos, rotations[1]));
 
                 pos = new Vector3(Mesh[topPlace].Vertexes[0].x + detail.MaxWidth / 2,
-                    Mesh[topPlace].Vertexes[0].y + cubeSize + detail.MaxHeight / 2, Mesh[topPlace].Vertexes[0].z - detail.MaxLength / 2 + cubeSize);
+                    Mesh[topPlace].Vertexes[0].y + cubeSize + detail.MaxHeight / 2,
+                    Mesh[topPlace].Vertexes[0].z - detail.MaxLength / 2 + cubeSize);
                 result.Add(new DetailPlace(pos, rotations[2]));
 
                 pos = new Vector3(Mesh[topPlace].Vertexes[0].x - detail.MaxLength / 2 + cubeSize,
-                    Mesh[topPlace].Vertexes[0].y + cubeSize + detail.MaxHeight / 2, Mesh[topPlace].Vertexes[0].z + detail.MaxWidth / 2);
+                    Mesh[topPlace].Vertexes[0].y + cubeSize + detail.MaxHeight / 2,
+                    Mesh[topPlace].Vertexes[0].z + detail.MaxWidth / 2);
                 result.Add(new DetailPlace(pos, rotations[3]));
             }
-         
+
             return result;
         }
 

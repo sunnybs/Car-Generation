@@ -6,6 +6,15 @@ namespace Assets.Utils.Blueprints
 {
     internal class Rect3X2Blueprint : BaseBlueprint
     {
+        public override int[] GetInfo()
+        {
+            var maxTransmissionCount = 6;
+            var maxWheelCount = 4;
+            var maxArmorCount = 4;
+            var maxGunCount = 2;
+            return new[] { maxTransmissionCount, maxWheelCount, maxArmorCount, maxGunCount };
+        }
+
         public override void StickTransmissions(List<GameObject> transmissions, CarMesh carMesh, float yLevel)
         {
             var xOffset = 0f;
@@ -22,37 +31,72 @@ namespace Assets.Utils.Blueprints
                 transmissions[i].transform.Translate(xOffset, yLevel, zOffset);
                 carMesh.AddMesh(transmissions[i].transform.position,
                     new Vector3(form.MaxWidth,form.MaxHeight,form.MaxLength),DetailType.Transmission);
-                zOffset += form.MaxHeight;
+                zOffset += form.MaxLength;
             }
         }
 
         public override void StickBody(GameObject body, CarMesh carMesh)
         {
-            var bodyForm = body.GetComponent<Detail>();
-            var positions = carMesh.FindBodyPlace(new Vector3(bodyForm.MaxWidth, bodyForm.MaxHeight, bodyForm.MaxLength));
-            var pos = positions.Count - 3; // Вот тут можно просто подобрать более менее нормальную позицию
-            carMesh.AddLevelsMesh(positions[pos], bodyForm);
-            var modelCenterOffset = body.GetComponentInChildren<Collider>().bounds.center;
-            body.transform.position = new Vector3(positions[pos].x - modelCenterOffset.x,
-                positions[pos].y - modelCenterOffset.y,
-                positions[pos].z - modelCenterOffset.z);
+            CarBuilder.TransformBody(body, carMesh, 2);
         }
 
         public override void StickArmors(List<GameObject> armors, CarMesh carMesh)
         {
-            CarBuilder.TransformDetail(armors[0], carMesh, 0);
+            var name = "RectBlueprintArmors";
+            bool staticMode = true;
+            try
+            {
+                if (staticMode) 
+                {
+                    var positions =
+                        CarBuilder.DeserializeTransforms("Assets/Utils/Blueprints/BlueprintsData/" + name + ".dat");
+                    for (var i = 0; i < positions.Count; i++)
+                    {
+                        CarBuilder.TransformDetail(armors[i], carMesh, positions[i]);
+                    }
+                }
+                else
+                {
+                    CarBuilder.TransformDetail(armors[0], carMesh, 0);
+                    CarBuilder.TransformDetail(armors[1], carMesh, 8);
+                    CarBuilder.TransformDetail(armors[2], carMesh, 46);
+                    CarBuilder.TransformDetail(armors[3], carMesh, 42);
+                    CarBuilder.SavePositions(armors, name);
+                }
 
-            CarBuilder.TransformDetail(armors[1], carMesh, 8);
+            }
+            catch (Exception e)
+            {
+                Debug.Log("Pos for armor in unavailable.");
+            }
+            
         }
 
         public override void StickGuns(List<GameObject> guns, CarMesh carMesh)
         {
+            var name = "RectBlueprintGuns";
+            bool staticMode = true;
             try
             {
-                CarBuilder.TransformDetail(guns[0], carMesh, 0);
+                if (staticMode)
+                {
+                    var positions =
+                        CarBuilder.DeserializeTransforms("Assets/Utils/Blueprints/BlueprintsData/" + name + ".dat");
+                    for (var i = 0; i < positions.Count; i++)
+                    {
+                        CarBuilder.TransformDetail(guns[i], carMesh, positions[i]);
+                    }
+                }
+                else
+                {
+                    CarBuilder.TransformDetail(guns[0], carMesh, 52);
+                    CarBuilder.TransformDetail(guns[1], carMesh, 52);
+                    CarBuilder.SavePositions(guns, name);
+                }
             }
             catch (Exception e)
             {
+                Debug.Log("Pos for gun in unavailable.");
             }
         }
     }

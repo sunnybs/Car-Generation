@@ -10,23 +10,29 @@ using UnityEngine;
 public class CarGenerator : MonoBehaviour
 {
     public GameObject CarInstance; // родительский объект для всех деталей машины (указывается через юнити)
-    public GameObject[] BodyObjects;
-    public GameObject[] TransmissionObjects; 
-    public GameObject[] WheelObjects;
     public GameObject[] ArmorObjects;
+    public GameObject[] BodyObjects;
     public GameObject[] GunObjects;
-    public int TransmissionCount;
-    public int WheelCount;
+    public GameObject[] TransmissionObjects;
+    public GameObject[] WheelObjects;
     public int ArmorCount;
     public int GunCount;
+    public int TransmissionCount;
+    public int WheelCount;
     private readonly int yLevel = 3; // уровень, на котором генерируются рамы
 
     private void OnGUI()
     {
         if (GUI.Button(new Rect(20, 20, 70, 30), "Generate"))
         {
+            ClearChildren(CarInstance);
+            if (!AreEnoughDetails()) return;
+
             var carMesh = new CarMesh();
-            var blueprint = BlueprintManager.PickByCount(TransmissionCount);
+            var blueprint = BlueprintManager.PickByCount(TransmissionCount, WheelCount, ArmorCount, GunCount);
+            var info = blueprint.GetInfo();
+            SetCorrectDetailsCount(info);
+
             var transmissions = LoadDetails(DetailType.Transmission, TransmissionCount);
             blueprint.StickTransmissions(transmissions, carMesh, yLevel);
             var wheels = LoadDetails(DetailType.Wheel, WheelCount);
@@ -34,13 +40,40 @@ public class CarGenerator : MonoBehaviour
             var body = LoadDetails(DetailType.Body, 1);
             blueprint.StickBody(body.First(), carMesh);
             var armors = LoadDetails(DetailType.Armor, ArmorCount);
-            blueprint.StickArmors(armors,carMesh);
+            blueprint.StickArmors(armors, carMesh);
             var guns = LoadDetails(DetailType.Gun, GunCount);
             blueprint.StickGuns(guns, carMesh);
 
-
-            //  PrintMesh(carMesh);
+            //PrintMesh(carMesh);
         }
+    }
+
+    private bool AreEnoughDetails()
+    {
+        if (TransmissionCount < 3)
+        {
+            Debug.Log("Transmission count can't be less than 3.");
+            return false;
+        }
+
+        return true;
+    }
+
+    public void ClearChildren(GameObject obj)
+    {
+        var allChildren = new List<GameObject>();
+        foreach (Transform child in obj.transform)
+            allChildren.Add(child.gameObject);
+        foreach (var child in allChildren)
+            Destroy(child.gameObject);
+    }
+
+    private void SetCorrectDetailsCount(int[] info)
+    {
+        if (TransmissionCount > info[0]) TransmissionCount = info[0];
+        if (WheelCount > info[1]) WheelCount = info[1];
+        if (ArmorCount > info[2]) ArmorCount = info[2];
+        if (GunCount > info[3]) GunCount = info[3];
     }
 
 
@@ -63,7 +96,7 @@ public class CarGenerator : MonoBehaviour
             else
                 randomDetail = new GameObject();
             var prefab = Instantiate(randomDetail, new Vector3(0, 0, 0), randomDetail.transform.rotation,
-                CarInstance.transform); // добавляет объект на карту и задает КарИнстанс как родительский объект
+                CarInstance.transform);
             details.Add(prefab);
         }
 
@@ -74,16 +107,11 @@ public class CarGenerator : MonoBehaviour
     {
         var allMeshVertexes = new HashSet<Vector3>();
         foreach (var cube in carMesh.Mesh.Values)
-        {
-            foreach (var vert in cube.Vertexes)
-                allMeshVertexes.Add(vert);
-          
-        }
+        foreach (var vert in cube.Vertexes)
+            allMeshVertexes.Add(vert);
         var lineRender = CarInstance.GetComponent<LineRenderer>();
         lineRender.widthMultiplier = 0.1f;
         lineRender.positionCount = allMeshVertexes.Count;
         lineRender.SetPositions(allMeshVertexes.ToArray());
     }
-
-    
 }

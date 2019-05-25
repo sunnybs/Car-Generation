@@ -5,6 +5,8 @@ namespace Assets.Utils
 {
     public abstract class BaseBlueprint
     {
+        public abstract int[] GetInfo();
+
         public abstract void StickTransmissions(List<GameObject> transmissions, CarMesh carMesh, float yLevel);
 
         public abstract void StickBody(GameObject body, CarMesh carMesh);
@@ -37,9 +39,9 @@ namespace Assets.Utils
                 }
 
                 wheels[i].transform.Translate(-form.MaxWidth, 0, 0);
-                carMesh.AddMesh(wheels[i].transform.position,
-                    new Vector3(form.MaxWidth, form.MaxHeight, form.MaxLength),
-                    DetailType.Wheel);
+                //carMesh.AddMesh(wheels[i].transform.position,
+                    //new Vector3(form.MaxWidth, form.MaxHeight, form.MaxLength),
+                    //DetailType.Wheel);
                 wheels[i].transform.Translate(-modelCenterOffset.x,-modelCenterOffset.y, -modelCenterOffset.z);
             }
 
@@ -66,9 +68,9 @@ namespace Assets.Utils
                 }
 
                 wheels[index].transform.Translate(form.MaxWidth, 0, 0);
-                carMesh.AddMesh(wheels[index].transform.position,
-                    new Vector3(form.MaxWidth, form.MaxHeight, form.MaxLength),
-                    DetailType.Wheel);
+                //carMesh.AddMesh(wheels[index].transform.position,
+                    //new Vector3(form.MaxWidth, form.MaxHeight, form.MaxLength),
+                    //DetailType.Wheel);
                 wheels[index].transform.Translate(-modelCenterOffset.x, -modelCenterOffset.y, -modelCenterOffset.z);
             }
         }
