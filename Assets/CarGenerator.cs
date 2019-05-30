@@ -50,9 +50,9 @@ public class CarGenerator : MonoBehaviour
 
     private bool AreEnoughDetails()
     {
-        if (TransmissionCount < 3)
+        if (TransmissionCount < 4)
         {
-            Debug.Log("Transmission count can't be less than 3.");
+            Debug.Log("Transmission count can't be less than 4.");
             return false;
         }
 

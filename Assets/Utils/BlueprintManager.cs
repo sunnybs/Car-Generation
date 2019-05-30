@@ -14,10 +14,11 @@ namespace Assets.Utils
                 .ToArray();
 
             var result = blueprints
-                .OrderBy(bp => Math.Abs(bp.GetInfo()[0] - transmissionCount))
-                .ThenBy(bp => Math.Abs(bp.GetInfo()[2] - armorCount))
-                .ThenBy(bp => Math.Abs(bp.GetInfo()[3] - gunsCount))
-                .ThenBy(bp => Math.Abs(bp.GetInfo()[1] - wheelCount))
+                .Where(bp => transmissionCount >= bp.GetInfo()[0])
+                .OrderBy(bp => transmissionCount - bp.GetInfo()[0])
+                .ThenBy(bp => Math.Abs(armorCount - bp.GetInfo()[2]))
+                .ThenBy(bp => Math.Abs(gunsCount - bp.GetInfo()[3]))
+                .ThenBy(bp => Math.Abs(wheelCount - bp.GetInfo()[1]))
                 .First();
             return result;
         }
