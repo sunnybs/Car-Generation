@@ -63,7 +63,7 @@ namespace Assets.Utils
         {
             var positions = objects.Select(pos => pos.transform).ToList();
             var serialized = SerializeTransforms(positions);
-            File.WriteAllText("Assets/Utils/Blueprints/JSONBlueprints/" + blueprint + ".json", serialized);
+            File.WriteAllText("Assets/Utils/Blueprints/BlueprintsData/" + blueprint + ".dat", serialized);
         }
 
         private static string SerializeTransforms(IEnumerable<Transform> positions)

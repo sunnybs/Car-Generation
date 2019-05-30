@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 namespace Assets.Utils.Blueprints
@@ -39,26 +38,19 @@ namespace Assets.Utils.Blueprints
         public override void StickArmors(List<GameObject> armors, CarMesh carMesh)
         {
             var name = "ArmorsSimpleBlueprint";
-            var createMode = false;
-            try
+            var staticMode = true;
+            if (staticMode)
             {
-                if (!createMode)
-                {
-                    var positions =
-                        CarBuilder.DeserializeTransforms("Assets/Utils/Blueprints/BlueprintsData/" + name + ".dat");
-                    for (var i = 0; i < positions.Count; i++)
-                        CarBuilder.TransformDetail(armors[i], carMesh, positions[i]);
-                }
-                else
-                {
-                    CarBuilder.TransformDetail(armors[0], carMesh, 0);
-                    CarBuilder.TransformDetail(armors[1], carMesh, 46);
-                    CarBuilder.SavePositions(armors, name);
-                }
+                var positions =
+                    CarBuilder.DeserializeTransforms("Assets/Utils/Blueprints/BlueprintsData/" + name + ".dat");
+                for (var i = 0; i < armors.Count; i++)
+                    CarBuilder.TransformDetail(armors[i], carMesh, positions[i]);
             }
-            catch (Exception e)
+            else
             {
-                Debug.Log("Pos for armor in unavailable.");
+                CarBuilder.TransformDetail(armors[0], carMesh, 0);
+                CarBuilder.TransformDetail(armors[1], carMesh, 46);
+                CarBuilder.SavePositions(armors, name);
             }
         }
 
@@ -66,27 +58,20 @@ namespace Assets.Utils.Blueprints
         {
             var name = "GunsSimpleBlueprint";
             var staticMode = true;
-            try
+            if (staticMode)
             {
-                if (staticMode)
-                {
-                    var positions =
-                        CarBuilder.DeserializeTransforms("Assets/Utils/Blueprints/BlueprintsData/" + name + ".dat");
-                    for (var i = 0; i < positions.Count; i++)
-                        CarBuilder.TransformDetail(guns[i], carMesh, positions[i]);
-                }
-                else
-                {
-                    CarBuilder.TransformDetail(guns[0], carMesh, 100);
-                    CarBuilder.TransformDetail(guns[1], carMesh, 100);
-                    CarBuilder.TransformDetail(guns[2], carMesh, 10);
-                    CarBuilder.TransformDetail(guns[3], carMesh, 6);
-                    CarBuilder.SavePositions(guns, name);
-                }
+                var positions =
+                    CarBuilder.DeserializeTransforms("Assets/Utils/Blueprints/BlueprintsData/" + name + ".dat");
+                for (var i = 0; i < guns.Count; i++)
+                    CarBuilder.TransformDetail(guns[i], carMesh, positions[i]);
             }
-            catch (Exception e)
+            else
             {
-                Debug.Log(e.Message);
+                CarBuilder.TransformDetail(guns[0], carMesh, 100);
+                CarBuilder.TransformDetail(guns[1], carMesh, 100);
+                CarBuilder.TransformDetail(guns[2], carMesh, 10);
+                CarBuilder.TransformDetail(guns[3], carMesh, 6);
+                CarBuilder.SavePositions(guns, name);
             }
         }
     }

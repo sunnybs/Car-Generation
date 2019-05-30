@@ -272,7 +272,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1009681624}
-  - component: {fileID: 1009681625}
   - component: {fileID: 1009681626}
   m_Layer: 0
   m_Name: Car
@@ -295,18 +294,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1009681625
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1009681623}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 10569fe7eecac2a4eaf111bbdc330058, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!120 &1009681626
 LineRenderer:
   m_ObjectHideFlags: 0
@@ -432,20 +419,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   CarInstance: {fileID: 1009681623}
+  ArmorObjects:
+  - {fileID: 1710557174798186590, guid: c1e797443e81baf45adf0a2926e3372a, type: 3}
   BodyObjects:
   - {fileID: 301040462468472995, guid: 578bd16f5d119dd409f2516bdc2653e0, type: 3}
+  GunObjects:
+  - {fileID: 5712560477699378822, guid: 6767de683cd59954db0be55cfd328ad7, type: 3}
   TransmissionObjects:
   - {fileID: 3622470229792423222, guid: bea93406bf4c309428b415a2dcda6170, type: 3}
   WheelObjects:
   - {fileID: 6384923217907246094, guid: 47565599fea941b4ca77219fa8372ce4, type: 3}
-  ArmorObjects:
-  - {fileID: 1710557174798186590, guid: c1e797443e81baf45adf0a2926e3372a, type: 3}
-  GunObjects:
-  - {fileID: 5712560477699378822, guid: 6767de683cd59954db0be55cfd328ad7, type: 3}
-  TransmissionCount: 6
-  WheelCount: 4
-  ArmorCount: 2
-  GunCount: 2
+  ArmorCount: 54
+  GunCount: 34
+  TransmissionCount: 7
+  WheelCount: 45
 --- !u!4 &1018326024
 Transform:
   m_ObjectHideFlags: 0
