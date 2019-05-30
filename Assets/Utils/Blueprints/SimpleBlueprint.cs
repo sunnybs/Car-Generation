@@ -16,19 +16,10 @@ namespace Assets.Utils.Blueprints
 
         public override void StickTransmissions(List<GameObject> transmissions, CarMesh carMesh, float yLevel)
         {
-            var xOffset = 0f; //отступ для сдвига деталей по ширине
-            var zOffset = 0f; //отступ для сдвига деталей по длине
-            foreach (var transmission in transmissions)
-            {
-                var form = transmission.GetComponent<Detail>();
-
-                transmission.transform.Translate(xOffset, yLevel, zOffset);
-                carMesh.AddMesh(transmission.transform.position,
-                    new Vector3(form.MaxWidth, form.MaxHeight, form.MaxLength), DetailType.Transmission);
-                zOffset += form.MaxLength;
-            }
+            CarBuilder.TransformTransmissionsInRect(transmissions, carMesh, yLevel, transmissions.Count,1);
         }
 
+   
         public override void StickBody(GameObject body, CarMesh carMesh)
         {
             CarBuilder.TransformBody(body, carMesh, 5);
